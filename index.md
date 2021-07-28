@@ -1,37 +1,84 @@
-## Welcome to GitHub Pages
+# Materiales
+Los materiales para la cursada se encuentran estructurados por módulos.
+Descarguen todos los materiales en conjunto, con el botón de __Download.zip__ que figura arriba. 
+En caso de que incorporemos nuevos materiales, les aviso y añado otro botón de descarga.
 
-You can use the [editor on GitHub](https://github.com/Guidowe/Intro_R_Intensivo/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+#### Librerias a instalar
+A lo largo del curso utilizaremos librerías complemetarias al lenguaje RBase. Con la siguiente línea de código se pueden instalar las principales de ellas:
+```
+install.packages(c("tidyverse","openxlsx",'ggthemes',ggrepel','ggalt','kableExtra','stringr','lubridate','eph','esquisse','rmarkdown'))
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+# Programa
 
-### Jekyll Themes
+### Módulos y contenidos
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Guidowe/Intro_R_Intensivo/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
-### Support or Contact
+__Módulo 1 – R Base:__
+ 
+[![](img/Download.png)](Modulo%202%20-%20R%20Base.rar)
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
++ Temas de clase:
+  + Descripción del programa “R”. Lógica sintáctica del lenguaje y comandos básicos
+  + Presentación de la plataforma RStudio para trabajar en “R”
+  + Caracteres especiales en “R”
+  + Operadores lógicos y aritméticos
+  + Definición de Objetos: Valores, Vectores y DataFrames
+  + Tipos de variable (numérica, de caracteres, lógicas)
+  + Lectura y Escritura de Archivos
+  
+<br>
+
+__Módulo 2 - Tidyverse__
+
+[![](img/Download.png)](Modulo%203%20-%20Tidyverse.rar)
+
++ Temas de clase:
+  + Limpieza de Base de datos: Renombrar y recodificar variables, tratamiento de valores faltantes (missing values/ NA´s)
+  + Seleccionar variables, ordenar y agrupar la base de datos para realizar cálculos
+  + Creación de nuevas variables, filtros y uniones de bases de datos
+  + Construir medidas de resumen de la información
++ Aplicaciones:   
+  + Cálculo de tasas básicas del mercado de trabajo (tasa de actividad, empleo, desempleo, entre otras) 
+  + Cálculo de tasas para distintos subconjuntos poblacionales (por aglomerado, sexo, grupos de edad)
+  + Estimación de indicadores asociados a la precariedad laboral
+  + Unión de información de la base individual con información de la base de hogares
+
+<br>
+
+__Módulo 3 - Visualización de la información__  
+
+[![](img/Download.png)](Modulo%204%20-%20Graficos.rar)
+
++ Temas de clase:
+  + Gráficos básicos de R (función “plot”): Comandos para la visualización ágil de la información
+  + Gráficos elaborados en R (función “ggplot”): 
+    + Gráficos de línea, barras, Boxplots 
+    + Extensiones de ggplot
+
+  
+<br>
+
+__Módulo 4: Documentación en R. Generación de reportes/informes.__
+
+[![](img/Download.png)](Modulo%205%20-%20Markdown.rar)
+
++ Temas de clase:
+  + Manejo de las extensiones del software “Rmarkdown” y “RNotebook” para elaborar documentos de trabajo, presentaciones interactivas e informes:
+    + Opciones para mostrar u ocultar código en los reportes
+    + Definición de tamaño, títulos y formato con el cual se despliegan los gráficos y tablas en el informe
+    + Caracteres especiales para incluir múltiples recursos en el texto del informe: Links a páginas web, notas al pie, enumeraciones, cambios en el formato de letra (tamaño, negrita, cursiva)
+    + Código embebido en el texto para automatización de reportes
+
+
+# Bibliografía complementaria
+
+- [Grolemund, G. y Wickham, H. (2019), R para Ciencia de Datos](https://es.r4ds.hadley.nz)
+
+- [Wickham, H. (2016), ggplot2: elegant graphics for data analysis. Springer, 2016. ](https://ggplot2-book.org/)
+
+- [Vázquez Brust, A. (2019), Ciencia de Datos para Gente Sociable](https://bitsandbricks.github.io/ciencia_de_datos_gente_sociable/)
+
+- [Wickham, H. (2019), The tidyverse style guide](https://style.tidyverse.org/)
+
+- INDEC(2003), La nueva Encuesta Permanente de Hogares de Argentina. 2003
