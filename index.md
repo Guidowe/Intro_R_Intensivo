@@ -16,8 +16,6 @@ install.packages(c("tidyverse","openxlsx",'ggthemes',ggrepel','ggalt','kableExtr
 
 __Módulo 1 – R Base:__
  
-[![](img/Download.png)](Modulo%202%20-%20R%20Base.rar)
-
 + Temas de clase:
   + Descripción del programa “R”. Lógica sintáctica del lenguaje y comandos básicos
   + Presentación de la plataforma RStudio para trabajar en “R”
@@ -27,11 +25,8 @@ __Módulo 1 – R Base:__
   + Tipos de variable (numérica, de caracteres, lógicas)
   + Lectura y Escritura de Archivos
   
-<br>
 
 __Módulo 2 - Tidyverse__
-
-[![](img/Download.png)](Modulo%203%20-%20Tidyverse.rar)
 
 + Temas de clase:
   + Limpieza de Base de datos: Renombrar y recodificar variables, tratamiento de valores faltantes (missing values/ NA´s)
@@ -44,11 +39,8 @@ __Módulo 2 - Tidyverse__
   + Estimación de indicadores asociados a la precariedad laboral
   + Unión de información de la base individual con información de la base de hogares
 
-<br>
 
 __Módulo 3 - Visualización de la información__  
-
-[![](img/Download.png)](Modulo%204%20-%20Graficos.rar)
 
 + Temas de clase:
   + Gráficos básicos de R (función “plot”): Comandos para la visualización ágil de la información
@@ -57,11 +49,7 @@ __Módulo 3 - Visualización de la información__
     + Extensiones de ggplot
 
   
-<br>
-
 __Módulo 4: Documentación en R. Generación de reportes/informes.__
-
-[![](img/Download.png)](Modulo%205%20-%20Markdown.rar)
 
 + Temas de clase:
   + Manejo de las extensiones del software “Rmarkdown” y “RNotebook” para elaborar documentos de trabajo, presentaciones interactivas e informes:
