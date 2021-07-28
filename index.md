@@ -1,4 +1,4 @@
-# Materiales
+# Intro a R con EPH
 Los materiales para la cursada se encuentran estructurados por módulos.
 Descarguen todos los materiales en conjunto, con el botón de __Download.zip__ que figura arriba. 
 En caso de que incorporemos nuevos materiales, les aviso y añado otro botón de descarga.
