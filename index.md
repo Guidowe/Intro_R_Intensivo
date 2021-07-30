@@ -6,7 +6,7 @@ En caso de que incorporemos nuevos materiales, les aviso y añado otro botón de
 #### Librerias a instalar
 A lo largo del curso utilizaremos librerías complemetarias al lenguaje RBase. Con la siguiente línea de código se pueden instalar las principales de ellas:
 ```
-install.packages(c("tidyverse","openxlsx",'ggthemes',ggrepel','ggalt','kableExtra','stringr','lubridate','eph','esquisse','rmarkdown'))
+install.packages(c("tidyverse","readxl","openxlsx","scales","questionr",'ggthemes',ggrepel','ggalt','kableExtra','stringr','lubridate','eph','esquisse','rmarkdown'))
 ```
 
 # Programa
