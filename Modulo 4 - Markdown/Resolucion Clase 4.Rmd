@@ -1,0 +1,168 @@
+---
+title: "Clase de Cierre del Curso"
+date: "26/08/2021"
+output: 
+  rmdformats::robobook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Introducción   
+En esta clase, como ejercicio de cierre trabajaremos en el armado de quintiles de ingreso de la ocupación principal e indicadores asociados a cada uno de ellos. Luego, veremos como escalar el ejercicio armando un loop que nos permita procesar los indicadores para **múltiples trimestres**.   
+
+La fuente de información será (una vez más) la [Encuesta Permanente de Hogares - INDEC](https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-60)
+
+# Carga de paquetes y de base de datos
+Carguemos los paquetes necesarios
+```{r}
+library(tidyverse)
+library(statar)
+```
+
+Levantamos una base de datos de la EPH, en este caso del 1er trimestre de 2017.  
+**Recordatorio**: Los RNotebooks toman como directorio de partida la carpeta en la cual tengamos grabado el archivo Rmd. Si queremos ir hacia atrás en la ruta, debemos añadir ```../```
+```{r}
+base <- read.table("../Fuentes/usu_individual_t117.txt",sep=";", dec=",", header = TRUE)
+```
+
+# Armado de quintiles  
+Dadas las características de la EPH, el armado de percentiles asociados a variables de ingreso (de individuos o familias)  requiere tener en cuenta dos aspectos importantes:      
+ - Debemos perturbar aleatoriamente la variable de ingresos en cuestión (dado que se acumulan muchos casos en valores puntuales. La gente declara ingresos redondeando lo que percibe realmente).      
+ - Necesitamos utilizar una función que permita incorporar ponderadores al armado de los percentiles. Utilizaremos el paquete [statar](https://github.com/matthieugomez/statar).   
+
+## Funciones para perturbar una variable
+Veamos la función ```runif()``` para *randomizar* números con una distribución uniforme, entre un mínimo y máximo establecido.
+```{r}
+runif(n = 10,min = -0.99,max = 0.99) # Randomización de numeros basada en una distribución uniforme entre "min y max"
+```
+¿Qué pasa si lo volvemos a correr la misma función de *aleatorización*?
+```{r}
+runif(n = 10,min = -0.99,max = 0.99) 
+```
+Al volver a ejecutarla podemos obtener resultados distintos a los previos. Para garantizar replicabilidad del ejercicio, podemos utilizar la función ```set.seed()```. Esta función nos permite, a partir de especificarle un número cualquiera, garantizar los mismos resultados cada vez que ejecutemos luego una función que realiza un procedimiento aleatorio
+```{r}
+set.seed(9999) #Semilla
+runif(10,min = 0.01,max = 0.99)
+set.seed(9999) #Semilla
+runif(10,min = 0.01,max = 0.99)
+```
+Para continuar con el ejercicio entonce, lo que hacemos es:   
+
+ - Setear la semilla antes del pedazo de código en el cual vamos a sumarle a la variable **P21** una variable de números aleatorios con distribución uniforme. La variable que se suma a P21, debe tener la misma longitud que aquella, lo cual podemos lograr especificando ```nrow(.)``` dentro de nuestra estructura de prodcesamiento sucesivo.   
+ - Luego, a partir de la variable perturbada *P21_p* podemos crear los quintiles con la función ```xtile()``` que corresponde al paquete **statar**.   
+ - Una vez que tenemos una base con los quintiles, podemos agrupar por dicha variable y generar todos los indicadores que nos resulten útiles para analizar.
+```{r echo=TRUE}
+set.seed(9999) #Semilla
+base_con_quintiles <- base %>%
+  filter(P21 > 0) %>%
+  mutate(P21_p  = P21 + runif(nrow(.),
+                              min = -0.99,
+                              max = 0.99)) %>% 
+  mutate(quintil = xtile(x = P21_p,
+                         n = 5,
+                         wt = PONDIIO))
+
+resultado <- base_con_quintiles %>% 
+  group_by(quintil) %>% 
+  summarise(casos = n(),
+            casos_pondera = sum(PONDIIO),
+            tasa_feminizacion = sum(PONDIIO[CH04==2])/casos_pondera,
+            salario_prom = weighted.mean(x = P21,w = PONDIIO))
+```
+
+```{r}
+resultado
+```
+
+# Escalando del procedimiento (loops)
+En esta sección se plasma el código para automatizar el escalamiento de este ejercicio para calcular estos indicadores a partir de bases de múltiples trimestres.
+
+## Loops
+
+Un __loop__ es una estructura de código que nos permite aplicar iterativamente un mismo conjunto de comandos, variando el valor de una variable. Por ejemplo:
+
+```{r,warning=FALSE}
+for(i in 1:10){
+   print(i^2)
+}
+```
+
+Esto se lee como : "Recorre cada uno de los valores (i) del vector numérico 1 a 10, y para cada uno de ellos imprimí el cuadrado (i^2)". 
+
+## Identificar las bases dentro de mi directorio de trabajo 
+Para leer muchas bases de datos de manera iterativa, una forma útil es crear antes un objeto con los nombres de archivos de mi carpeta de trabajo. Lo hacemos con la función ```list.files()```.   
+```{r}
+archivos <- list.files("../Fuentes/")
+archivos
+```
+En este caso tenemos otros archivos además de las bases de la eph. Con la ```str_detect()``` podemos identificar aquellos que contienen el texto "indiv", y así solo conservar un vector con los nombres de aquellos objetos que sean bases individuales de la EPH.
+```{r}
+rutas_base_ind<- archivos[str_detect(string = archivos,pattern = "indiv")]
+rutas_base_ind
+```
+## Aplicación del loop   
+Una **aclaración imporante** a la hora de armar un loop, es que su estructura de código conforma una unidad, y no puede ser separada en distintos chunks en un documento como este. A su vez, tampoco puede correrse el código interno por serparado. Es necesario ejecutarlo en su unidad. Los pasos aquí recomendados para el ejercicio en cuestión son los siguientes:    
+
+ - Creo un dataframe vacío llamado **resultado_apilado** con la función ```data.frame()```, el cual iré usando dentro de la estructura del loop para ir apilando los resultados de cada uno de los trimestres.  
+ - Abro un loop que itere sobre el vector que contiene los nombres de las bases de datos que tengo que levantar.  
+ - Dentro del loop voy a usar ```read.table()``` para importar las bases de datos, pero el parámetro ```file``` va a ser variable en función del valor que tome la iteración en cuestión. 
+ - Aplico el código que ya diseñamos para procesar un trimestre, simplemente agregando dentro del ```group_by()``` las variables **ANO4** y **TRIMESTRE** para conservar la identificación del período en mi base de resultados
+ - Utilizo ```bind_rows()`` al final del procedimiento para apilarle a mi objeto inicialmente vacío los resultados de cada una de la iteración. En la primera iteración le sumaré los datos del primer trimestre procesado a un objeto vació. En la segunda iteración le sumaré los datos del segundo trimestre procesado a los que tenía de 1 sólo trimestre. Si tuviera más bases en mi carpeta de trabajo, el procedimiento se repetiría hasta agotar todas las bases
+```{r}
+resultado_apilado <-data.frame() 
+
+for(base in rutas_base_ind){
+eph <- read.table(file = paste0("../Fuentes/",base),
+             sep=";",
+             dec=",",
+             header = TRUE)
+
+set.seed(999)# Semilla aleatorización
+
+base_con_quintiles <- eph %>%
+  filter(P21 > 0) %>%
+  mutate(P21_p  = P21 + runif(nrow(.),
+                              min = -0.99,
+                              max = 0.99)) %>% 
+  mutate(quintil = xtile(x = P21_p,
+                         n = 5,
+                         wt = PONDIIO))
+
+resultado <- base_con_quintiles %>% 
+  group_by(ANO4,TRIMESTRE,quintil) %>% 
+  summarise(casos = n(),
+            casos_pondera = sum(PONDIIO),
+            tasa_feminizacion = sum(PONDIIO[CH04==2])/casos_pondera,
+            salario_prom = weighted.mean(x = P21,w = PONDIIO))
+
+resultado_apilado <- bind_rows(resultado_apilado,resultado)
+
+}
+```
+¿Como muestro de manera más sencilla el resultado en el documento?
+```{r}
+resultado_apilado 
+```
+Si quiero transformar el formato de las variables acudo al paquete **scales**. Por ejemplo, con la función ```percent``` paso la tasa de feminización a % especificando cantidad de decimales, y con la función ```number``` le puedo especificar que quiero el ```.```  para separar los miles, y ```,``` para decimales
+```{r}
+resultado_apilado_formato<- resultado_apilado %>% 
+  mutate(tasa_feminizacion = scales::percent(x = tasa_feminizacion,
+                                             accuracy = 0.1),# 1 decimal
+         salario_prom  = scales::number(x = salario_prom,
+                                        big.mark = ".", 
+                                        decimal.mark = ",", #coma decimal
+                                        accuracy = 0.01)) # 2 decimales
+
+
+resultado_apilado_formato
+```
+Por último: el paquete [kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html) tiene unos estilos predefinidos para tunear un poco la tabla y que se vea aún más linda en la presentación. Lo más sencillo que podemos hacer es lo siguiente:
+
+```{r}
+resultado_apilado_formato %>% 
+  kableExtra::kable() %>% 
+  kableExtra::kable_styling()
+```
+

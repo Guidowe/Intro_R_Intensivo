@@ -1,9 +1,15 @@
 individual_t117 <- read.table(file = 'Fuentes/usu_individual_t117.txt',
-                              sep=";", 
-                              dec=",", 
+                              sep=";",
+                              dec=",",
                               header = TRUE, 
                               fill = TRUE)
 
+individual_t119 <- read.table(file = 'Fuentes/usu_individual_t119.txt',
+                              sep=";",
+                              dec=",",
+                              header = TRUE, 
+                              fill = TRUE)
+6+6
 A <- 1
 A 
 
